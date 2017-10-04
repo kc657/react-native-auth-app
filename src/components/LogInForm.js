@@ -1,31 +1,36 @@
 import React, {Component} from 'react'
-import {TextInput} from 'react-native'
-import {Button, Card, CardSection} from './common'
+import {Button, Card, CardSection, Input} from './common'
 
 class LogInForm extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      text: ''
+      emailInput: '',
+      passwordInput: ''
     }
-  }
-
-  componentWillMount(){
-    console.log(this.state.text);
   }
 
   render () {
     return (
       <Card>
         <CardSection>
-          <TextInput
-            value={this.state.text}
-            onChangeText={(text) => this.setState({text: text})}
-            style={{height: 20, width: 100}}
+          <Input
+            value={this.state.emailInput}
+            onChangeText={(emailInput) => this.setState({emailInput})}
+            label='Email'
+            placeholder='user@example.com'
           />
         </CardSection>
 
-        <CardSection />
+        <CardSection>
+          <Input
+            value={this.state.passwordInput}
+            onChangeText={(passwordInput) => this.setState({passwordInput})}
+            label='Password'
+            placeholder='password'
+            isPassword
+          />
+        </CardSection>
 
         <CardSection>
           <Button>
