@@ -1,7 +1,8 @@
 import React, {Component} from 'react'
 import {View, Text} from 'react-native'
-import {Header} from './components/common'
 import firebase from 'firebase'
+import {Header} from './components/common'
+import LogInForm from './components/LogInForm'
 
 class App extends Component {
   componentWillMount = () => {
@@ -14,11 +15,12 @@ class App extends Component {
       messagingSenderId: '186955592850'
     })
   }
-  
+
   render () {
     return (
       <View>
         <Header headerText='Hello World' />
+        <LogInForm />
       </View>
     )
   }
