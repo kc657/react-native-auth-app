@@ -33,4 +33,5 @@ const styles = {
   }
 }
 
-export default Button
+export { Button }
+// Different export because we use the * method in index.js
