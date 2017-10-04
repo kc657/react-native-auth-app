@@ -1,4 +1,6 @@
 import React, {Component} from 'react'
+import {Text} from 'react-native'
+import firebase from 'firebase'
 import {Button, Card, CardSection, Input} from './common'
 
 class LogInForm extends Component {
@@ -6,8 +8,20 @@ class LogInForm extends Component {
     super(props)
     this.state = {
       emailInput: '',
-      passwordInput: ''
+      passwordInput: '',
+      error: ''
     }
+  }
+
+  onButtonPress = () => {
+    const {emailInput, passwordInput} = this.state
+    firebase.auth().signInWithEmailAndPassword(emailInput, passwordInput)
+      .catch( () => {
+        firebase.auth().createUserWithEmailAndPassword(emailInput,passwordInput)
+          .catch( () => {
+            this.setState({error:'Authentication Failed'})
+          })
+      })
   }
 
   render () {
@@ -32,13 +46,25 @@ class LogInForm extends Component {
           />
         </CardSection>
 
+        <Text style={styles.errorTextStyle}>
+          {this.state.error}
+        </Text>
+
         <CardSection>
-          <Button>
+          <Button onPress={this.onButtonPress}>
             Login
           </Button>
         </CardSection>
       </Card>
     )
+  }
+}
+
+const styles = {
+  errorTextStyle:{
+    fontSize: 20,
+    alignSelf: 'center',
+    color: 'red'
   }
 }
 
