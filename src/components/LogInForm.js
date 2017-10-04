@@ -15,6 +15,7 @@ class LogInForm extends Component {
 
   onButtonPress = () => {
     const {emailInput, passwordInput} = this.state
+    this.setState({error:''})
     firebase.auth().signInWithEmailAndPassword(emailInput, passwordInput)
       .catch( () => {
         firebase.auth().createUserWithEmailAndPassword(emailInput,passwordInput)
