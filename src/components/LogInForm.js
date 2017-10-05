@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {Text} from 'react-native'
 import firebase from 'firebase'
-import {Button, Card, CardSection, Input} from './common'
+import {Button, Card, CardSection, Input, Spinner} from './common'
 
 class LogInForm extends Component {
   constructor (props) {
@@ -9,20 +9,52 @@ class LogInForm extends Component {
     this.state = {
       emailInput: '',
       passwordInput: '',
-      error: ''
+      error: '',
+      loading: false
     }
   }
 
   onButtonPress = () => {
     const {emailInput, passwordInput} = this.state
-    this.setState({error:''})
-    firebase.auth().signInWithEmailAndPassword(emailInput, passwordInput)
-      .catch( () => {
-        firebase.auth().createUserWithEmailAndPassword(emailInput,passwordInput)
-          .catch( () => {
-            this.setState({error:'Authentication Failed'})
-          })
-      })
+    this.setState({
+      error:'',
+      loading: true
+    },()=>{
+      firebase.auth().signInWithEmailAndPassword(emailInput, passwordInput)
+        .then(this.onLoginSuccess())
+        .catch( () => {
+          firebase.auth().createUserWithEmailAndPassword(emailInput, passwordInput)
+            .then(this.onLoginSuccess())
+            .catch(this.onLoginFail())
+        })
+    })
+  }
+
+  onLoginSuccess = () => {
+    this.setState({
+      emailInput: '',
+      passwordInput: '',
+      loading:false,
+      error: ''
+    })
+  }
+
+  onLoginFail = () => {
+    this.setState({
+      error:'Authentication Failed',
+      loading: false,
+    })
+  }
+
+  renderButton = () => {
+    if (this.state.loading) {
+      return <Spinner size='small'/>
+    }
+    return(
+      <Button onPress={this.onButtonPress}>
+        Login
+      </Button>
+    )
   }
 
   render () {
@@ -52,9 +84,7 @@ class LogInForm extends Component {
         </Text>
 
         <CardSection>
-          <Button onPress={this.onButtonPress}>
-            Login
-          </Button>
+          {this.renderButton()}
         </CardSection>
       </Card>
     )
